@@ -1,0 +1,40 @@
+.nav-pills .nav-link.active {
+    color: #000;
+    background-color: rgba(127, 208, 255, 0.61);
+    border-radius: 18px;
+}
+
+.nav-pills .nav-link {
+    color: #000;
+}
+
+.nav-item {
+    width: 100%;
+}
+
+.card-body {
+    flex-direction: column;
+}
+
+.user-profile {
+    display: grid;
+    grid-template-columns: 18% auto;
+}
+
+.profile-img > img {
+    width: 42px;
+    height: 42px;
+}
+
+.profileInfo > p {
+    text-decoration: none !important;
+    color: black;
+    border-bottom: none !important;
+}
+
+@media screen and (max-width: 900px){
+    .user-profile {
+        display: flex;
+        flex-direction: column;
+    }
+}

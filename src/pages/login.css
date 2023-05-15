@@ -1,0 +1,28 @@
+.cardBody {
+    background-color: rgb(211, 211, 211);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    width: 60vw;
+}
+
+.login-image {
+    padding-top: 20vh;
+    padding-bottom: 20vh;
+    color: white;
+}
+
+@media screen and (max-width: 770px) {
+    .login-image {
+        display: none;
+    }
+
+    .card {
+        width: 90vw;
+        text-align: center;
+    }
+}

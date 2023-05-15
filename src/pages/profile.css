@@ -1,0 +1,19 @@
+.profile {
+    height: 170px;
+    background-color: #4287f5;
+}
+
+.profile > img {
+    width: 100px;
+    height: 100px;
+}
+
+.user-detail {
+    padding-top: 50px;
+}
+
+@media screen and (max-width: 900px) {
+    .profile {
+        height: 100px;
+    }
+}

@@ -1,0 +1,10 @@
+.tweet {
+    background-color: #fff;
+    height: 100%;
+}
+
+@media screen and (max-width: 900px) {
+    .container {
+        width: 100vw;
+    }
+}
