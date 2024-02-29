@@ -1,22 +1,30 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/login';
-import Register from './pages/register';
-import AuthRoutes from './routes/authRoute';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import AuthRoutes from "./routes/authRoute";
+import { createContext, useContext } from "react";
+import { ToastContainer } from "react-toastify";
+
+const ApiContext = createContext();
 
 function App() {
-
-  // api url
-  const API_URL = "https://electric-blue-pelican-suit.cyclic.app";
-
+  const API_URL = process.env.REACT_APP_API_URL;
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/login' element={<Login API_URL={API_URL}  />} />
-        <Route path='/register' element={<Register API_URL={API_URL} />} />
-        <Route path='/*' element={<AuthRoutes />} />
-      </Routes>
-    </BrowserRouter>
+    <ApiContext.Provider value={API_URL}>
+      <ToastContainer draggable />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/*" element={<AuthRoutes />} />
+        </Routes>
+      </BrowserRouter>
+    </ApiContext.Provider>
   );
 }
 
-export default App;
+function useApiUrl() {
+  return useContext(ApiContext);
+}
+
+export { useApiUrl, App as default };
