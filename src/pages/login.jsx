@@ -78,7 +78,7 @@ const Login = () => {
           navigate("/");
           setLoading(false);
         } else {
-          toast.error(response.data.errMsg, {
+          toast.error(response.data.errMsg ?? "Something went wrong!", {
             position: "top-right",
             autoClose: 800,
             toastId: customId2,
@@ -88,11 +88,17 @@ const Login = () => {
       })
       .catch((error) => {
         // handle error
-        toast.error(error.response.data.errMsg || "Failed to login!", {
-          position: "top-right",
-          autoClose: 800,
-          toastId: customId2,
-        });
+        toast.error(
+          error.response.data.errMsg ||
+            (error.response?.status === 500
+              ? "Internal server error!"
+              : "Something went wrong!"),
+          {
+            position: "top-right",
+            autoClose: 800,
+            toastId: customId2,
+          }
+        );
         setLoading(false);
       });
   };

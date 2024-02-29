@@ -86,10 +86,6 @@ const Register = (props) => {
           toastId: customId1,
         });
         navigate("/login");
-      } else if (!response.data.isSuccess) {
-        setError((err) => {
-          return { ...err, [response.data.errFor]: response.data.errMsg };
-        });
       } else {
         toast.error("Something went wrong!", {
           position: "bottom-right",
@@ -98,10 +94,16 @@ const Register = (props) => {
       }
     } catch (error) {
       setLoading(false);
-      toast.error("Internal error occurred!", {
-        position: "bottom-right",
-        toastId: customId2,
-      });
+      toast.error(
+        error.response?.data.errMsg ??
+          (error.response?.status === 500
+            ? "Internal server error!"
+            : "Something went wrong!"),
+        {
+          position: "bottom-right",
+          toastId: customId2,
+        }
+      );
     }
     setLoading(false);
   };
