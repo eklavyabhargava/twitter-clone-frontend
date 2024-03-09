@@ -1,8 +1,7 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
-import Profile from "../pages/profile";
-import Home from "../pages/home";
-import SideBar from "../components/sideBar";
-import TweetDetail from "../pages/tweetDetail";
+import Profile from "../pages/Profile";
+import Home from "../pages/Home";
+import TweetDetail from "../pages/TweetDetail";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useApiUrl } from "../App";
@@ -10,6 +9,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../shared/actions";
 import Loading from "../components/loading";
+import NavBar from "../components/NavBar";
 
 export function reAuthenticate() {
   localStorage.removeItem("userData");
@@ -25,16 +25,16 @@ export default function AuthRoutes() {
   function onApiError(error) {
     toast.error(
       error?.response?.data?.errMsg ??
-        (error.response.status === 500
+        (error.response?.status && error.response.status === 500
           ? "Internal server error!"
-          : "Some Error Occurred!"),
+          : "Something went wrong!"),
       {
         position: "bottom-right",
-        autoClose: 5000, // Adjust the duration as needed
+        autoClose: 1000,
         toastId: toastId,
       }
     );
-    if (error.response.status === 401) {
+    if (error?.response?.status && error.response.status === 401) {
       reAuthenticate();
       navigate("/login");
     }
@@ -77,11 +77,14 @@ export default function AuthRoutes() {
     }
 
     try {
-      const response = await axios.get(`${API_URL}/api/user/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
-        },
-      });
+      const response = await axios.get(
+        `${API_URL}/api/user/get-user-details/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
       if (response.data.isSuccess) {
         return response.data;
       } else {
@@ -273,63 +276,60 @@ export default function AuthRoutes() {
     <>
       {!user && <Loading />}
       {user && (
-        <>
-          <div className="mx-auto p-0 row container App">
-            <div className="mx-auto p-0 row container">
-              <div className="col-4 sidebar">
-                <SideBar />
-              </div>
-              <div className="col-8" style={{ backgroundColor: "#fff" }}>
-                <div>
-                  <Routes>
-                    <Route
-                      path="/"
-                      element={
-                        <Home
-                          onApiError={onApiError}
-                          tweetReply={tweetReply}
-                          tweetDetailPage={tweetDetailPage}
-                          getProfile={getProfile}
-                          handleRetweet={handleRetweet}
-                          handleDelete={handleDelete}
-                          handleLike={handleLike}
-                        />
-                      }
-                    />
-                    <Route
-                      path="/profile"
-                      element={
-                        <Profile
-                          onApiError={onApiError}
-                          tweetReply={tweetReply}
-                          getUserProfile={getUserProfile}
-                          getProfile={getProfile}
-                          handleRetweet={handleRetweet}
-                          handleDelete={handleDelete}
-                          handleLike={handleLike}
-                        />
-                      }
-                    />
-                    <Route
-                      path="/tweetDetail/:tweetId"
-                      element={
-                        <TweetDetail
-                          onApiError={onApiError}
-                          tweetReply={tweetReply}
-                          tweetDetailPage={tweetDetailPage}
-                          getProfile={getProfile}
-                          handleRetweet={handleRetweet}
-                          handleDelete={handleDelete}
-                          handleLike={handleLike}
-                        />
-                      }
-                    />
-                  </Routes>
-                </div>
-              </div>
-            </div>
+        <div className="flex flex-col justify-center w-full md:w-[80%] mx-auto">
+          <div className="fixed w-full md:w-[80%] top-0 bg-white z-10">
+            <NavBar onApiError={onApiError} token={token} />
           </div>
-        </>
+          <div
+            className="relative md:w-[90%] w-full mx-auto mt-16"
+            style={{ backgroundColor: "" }}
+          >
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Home
+                    onApiError={onApiError}
+                    tweetReply={tweetReply}
+                    tweetDetailPage={tweetDetailPage}
+                    getProfile={getProfile}
+                    handleRetweet={handleRetweet}
+                    handleDelete={handleDelete}
+                    handleLike={handleLike}
+                  />
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <Profile
+                    onApiError={onApiError}
+                    tweetReply={tweetReply}
+                    getUserProfile={getUserProfile}
+                    getProfile={getProfile}
+                    handleRetweet={handleRetweet}
+                    handleDelete={handleDelete}
+                    handleLike={handleLike}
+                  />
+                }
+              />
+              <Route
+                path="/tweetDetail/:tweetId"
+                element={
+                  <TweetDetail
+                    onApiError={onApiError}
+                    tweetReply={tweetReply}
+                    tweetDetailPage={tweetDetailPage}
+                    getProfile={getProfile}
+                    handleRetweet={handleRetweet}
+                    handleDelete={handleDelete}
+                    handleLike={handleLike}
+                  />
+                }
+              />
+            </Routes>
+          </div>
+        </div>
       )}
     </>
   );

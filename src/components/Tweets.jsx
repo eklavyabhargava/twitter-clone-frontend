@@ -6,7 +6,7 @@ import axios from "axios";
 import { useApiUrl } from "../App";
 import Loading from "./loading";
 import { useSelector } from "react-redux";
-import { reAuthenticate } from "../routes/authRoute";
+import { reAuthenticate } from "../routes/AuthRoute";
 import { useNavigate } from "react-router-dom";
 
 const Tweets = ({
@@ -16,6 +16,7 @@ const Tweets = ({
   handleRetweet,
   tweetDetailPage,
   tweetReply,
+  onApiError,
 }) => {
   // api url
   const API_URL = useApiUrl();
@@ -128,7 +129,7 @@ const Tweets = ({
   }, []);
 
   return (
-    <div className="tweets">
+    <div className="tweets w-full">
       {!tweets || Object.keys(tweets) === 0 ? (
         <Loading />
       ) : (
@@ -138,7 +139,7 @@ const Tweets = ({
               tweetDetailPage(tweet._id);
             }}
             key={tweet._id}
-            className="card mx-auto my-2 py-1"
+            className="card border-x-0 border-t-0 w-full my-2 py-1"
             style={{ maxWidth: "95%" }}
           >
             {tweet.tweetedBy._id === user._id && (
@@ -161,52 +162,50 @@ const Tweets = ({
                 ></i>
               </button>
             )}
-            <div className="row g-0">
-              <div className="col-md-1">
-                <div className="user-img ps-3 mt-4 pt-1">
-                  <img
-                    className="img-fluid rounded-circle"
-                    src={`${API_URL}/${tweet.tweetedBy._id}/profile-pic`}
-                    alt=""
-                  />
-                </div>
-              </div>
-              <div className="col-md-8 pt-1">
-                <div className="p-0 ps-1 m-0 subtitle">
+            <div className="ml-2">
+              {tweet.retweetBy && tweet.retweetBy.length > 0 && (
+                <div className="subtitle">
                   <i
                     className="fa-solid fa-retweet"
                     style={{ color: "#6d6d6d" }}
                   ></i>{" "}
-                  Retweeted by{" "}
-                  {tweet.retweetBy && tweet.retweetBy.length > 0 && (
-                    <span>{tweet.retweetBy[0].username}</span>
-                  )}
+                  Retweeted by <span>{tweet.retweetBy[0].username}</span>
                 </div>
-                <p className="card-title fs-5 mt-0 pt-0 ps-1 mb-0">
+              )}
+              <div className="user-img flex mt-2 flex-row">
+                <img
+                  className="img-fluid rounded-circle"
+                  src={`${API_URL}/${tweet.tweetedBy._id}/profile-pic`}
+                  alt=""
+                />
+                <div className="flex flex-col ml-3 my-auto leading-tight">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       getProfile(tweet.tweetedBy._id);
                     }}
-                    className="username"
+                    className="username border-none"
                   >
                     @{tweet.tweetedBy.username}
-                  </button>{" "}
+                  </button>
                   <span className="subtitle">
                     - {new Date(tweet.createdAt).toDateString()}
                   </span>
-                </p>
-                <div className="card-body ps-1 pt-1">
-                  <p className="card-text mb-2">{tweet.content}</p>
+                </div>
+              </div>
+              <div className=" ml-[38px]">
+                <p className="card-title "></p>
+                <div className="card-body">
+                  <p className="card-text">{tweet.content}</p>
                   {tweet.image && (
                     <img
-                      className="img-fluid mt-0"
+                      className="img-fluid h-[500px] mx-auto w-auto mt-2"
                       src={`${API_URL}/post-image/${tweet._id}`}
                       alt=""
                     />
                   )}
                   <button
-                    className="post-button me-3"
+                    className="post-button mr-4"
                     onClick={(e) => {
                       e.stopPropagation();
                       likeTweet(e, tweet._id);
@@ -227,7 +226,7 @@ const Tweets = ({
                     type="button"
                     data-bs-toggle="modal"
                     data-bs-target="#replyBackdrop"
-                    className="post-button me-3"
+                    className="post-button mr-4"
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
@@ -306,7 +305,7 @@ const Tweets = ({
                   </div>
 
                   <button
-                    className="post-button me-3"
+                    className="post-button mr-4"
                     onClick={(e) => {
                       e.stopPropagation();
                       Retweet(e, tweet._id);

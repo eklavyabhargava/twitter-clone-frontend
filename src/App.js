@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import AuthRoutes from "./routes/authRoute";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import AuthRoutes from "./routes/AuthRoute";
 import { createContext, useContext } from "react";
 import { ToastContainer } from "react-toastify";
 

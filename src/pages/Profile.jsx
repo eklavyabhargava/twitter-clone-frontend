@@ -1,8 +1,7 @@
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./profile.css";
-import UserInfo from "../components/userInfo";
-import UserTweet from "../components/userTweet";
+import UserInfo from "../components/UserInfo";
+import UserTweet from "../components/UserTweet";
 import { useApiUrl } from "../App";
 import Loading from "../components/loading";
 import { useEffect, useState } from "react";
@@ -35,12 +34,11 @@ const Profile = ({
 
   return (
     <>
-      {!userInfo ? (
+      {!userInfo || Object.keys(userInfo) === 0 ? (
         <Loading />
       ) : (
         <>
           <div>
-            <p className="fw-bold fs-3">Profile</p>
             <div className="profile mb-2">
               <img
                 className="img-fluid mb-0 pb-0 rounded-circle ms-3 position-relative top-100 start-0 translate-middle-y"
@@ -48,7 +46,7 @@ const Profile = ({
                 alt=""
               />
             </div>
-            <div className="position-relative user-detail top-100 ms-3">
+            <div className="relative user-detail top-100 ms-3">
               <UserInfo
                 userData={userInfo}
                 userId={userId}

@@ -2,11 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import TweetInfo from "../components/tweetDetail";
-import TweetReplies from "../components/tweetReplies";
+import TweetInfo from "../components/TweetDetail";
+import TweetReplies from "../components/TweetReplies";
 import { useApiUrl } from "../App";
 import { useNavigate } from "react-router-dom";
-import { reAuthenticate } from "../routes/authRoute";
+import { reAuthenticate } from "../routes/AuthRoute";
 
 const TweetDetail = ({
   tweetReply,
@@ -14,6 +14,7 @@ const TweetDetail = ({
   handleLike,
   handleRetweet,
   tweetDetailPage,
+  getProfile,
   onApiError,
 }) => {
   // api url
@@ -43,7 +44,7 @@ const TweetDetail = ({
         }
       );
       if (response.data.isSuccess) {
-        setTweetDetail(response.data.Tweet);
+        setTweetDetail(response.data.tweet);
       } else {
         toast.error(response.data.errMsg || "Some Error Occurred!", {
           position: "bottom-right",
@@ -63,32 +64,30 @@ const TweetDetail = ({
   }, []);
 
   return (
-    <>
-      <div>
-        <p className="fw-bold fs-3">Tweet</p>
-        <TweetInfo
-          onApiError={onApiError}
-          tweetReply={tweetReply}
-          tweetInfo={tweetDetail}
-          handleLike={handleLike}
-          handleRetweet={handleRetweet}
-          handleDelete={handleDelete}
-          getTweetDetail={getTweetDetail}
-        />
+    <div className="relative">
+      <TweetInfo
+        getProfile={getProfile}
+        onApiError={onApiError}
+        tweetReply={tweetReply}
+        tweetInfo={tweetDetail}
+        handleLike={handleLike}
+        handleRetweet={handleRetweet}
+        handleDelete={handleDelete}
+        getTweetDetail={getTweetDetail}
+      />
 
-        <p className="fw-bold fs-5 mt-4">Replies</p>
-        <TweetReplies
-          onApiError={onApiError}
-          tweetReply={tweetReply}
-          tweetInfo={tweetDetail}
-          tweetDetailPage={tweetDetailPage}
-          handleLike={handleLike}
-          handleRetweet={handleRetweet}
-          handleDelete={handleDelete}
-          getTweetDetail={getTweetDetail}
-        />
-      </div>
-    </>
+      <p className="fw-bold fs-5 mt-4">Replies</p>
+      <TweetReplies
+        onApiError={onApiError}
+        tweetReply={tweetReply}
+        tweetInfo={tweetDetail}
+        tweetDetailPage={tweetDetailPage}
+        handleLike={handleLike}
+        handleRetweet={handleRetweet}
+        handleDelete={handleDelete}
+        getTweetDetail={getTweetDetail}
+      />
+    </div>
   );
 };
 

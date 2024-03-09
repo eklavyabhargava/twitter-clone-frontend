@@ -1,5 +1,5 @@
 import "react-toastify/dist/ReactToastify.css";
-import HomePage from "../components/homePage";
+import HomePage from "../components/HomePage";
 
 const Home = ({
   tweetDetailPage,
@@ -11,7 +11,7 @@ const Home = ({
   onApiError,
 }) => {
   return (
-    <>
+    <div className="relative w-full">
       <HomePage
         onApiError={onApiError}
         tweetReply={tweetReply}
@@ -21,7 +21,7 @@ const Home = ({
         handleRetweet={handleRetweet}
         handleDelete={handleDelete}
       />
-    </>
+    </div>
   );
 };
 

@@ -1,9 +1,8 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useApiUrl } from "../App";
-import { reAuthenticate } from "../routes/authRoute";
+import { reAuthenticate } from "../routes/AuthRoute";
 import Loading from "./loading";
 import { useSelector } from "react-redux";
 
@@ -105,7 +104,7 @@ const TweetInfo = ({
               {tweetDetail.image && (
                 <img
                   className="img-fluid"
-                  src={`${API_URL}/jpost-image/${tweetDetail._id}`}
+                  src={`${API_URL}/post-image/${tweetDetail._id}`}
                   alt=""
                 />
               )}

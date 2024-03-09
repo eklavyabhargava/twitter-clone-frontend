@@ -1,5 +1,5 @@
 import axios from "axios";
-import { reAuthenticate } from "../routes/authRoute";
+import { reAuthenticate } from "../routes/AuthRoute";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const jwtToken = JSON.parse(localStorage.getItem("userData"))?.token;
@@ -15,9 +15,14 @@ export const updateUserData = (user) => ({
 });
 
 export const followUser = (userIdToFollow) => async (dispatch) => {
+  if (!API_URL || !jwtToken) {
+    // Handle the case where API_URL or jwtToken is not available
+    return { isSuccess: false };
+  }
+
   try {
     const response = await axios.put(
-      `${API_URL}/${userIdToFollow}/follow`,
+      `${API_URL}/api/user/follow/${userIdToFollow}`,
       null,
       {
         headers: {
@@ -34,18 +39,14 @@ export const followUser = (userIdToFollow) => async (dispatch) => {
       return { isSuccess: false };
     }
   } catch (error) {
-    if (error?.response?.status === 401) {
-      reAuthenticate();
-      window.location = "/login";
-    }
-    return { isSuccess: false };
+    return { isSuccess: false, status: error.response.status ?? null };
   }
 };
 
 export const unfollowUser = (userIdToUnFollow) => async (dispatch) => {
   try {
     const response = await axios.put(
-      `${API_URL}/${userIdToUnFollow}/unfollow`,
+      `${API_URL}/api/user/unfollow/${userIdToUnFollow}`,
       null,
       {
         headers: {

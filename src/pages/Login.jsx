@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import Spinner from "react-bootstrap/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -71,7 +72,7 @@ const Login = () => {
           );
           dispatch(setUser(response.data.user));
           toast.success("Login Successful!", {
-            position: "top-right",
+            position: "bottom-right",
             autoClose: 800,
             toastId: customId1,
           });
@@ -79,7 +80,7 @@ const Login = () => {
           setLoading(false);
         } else {
           toast.error(response.data.errMsg ?? "Something went wrong!", {
-            position: "top-right",
+            position: "bottom-right",
             autoClose: 800,
             toastId: customId2,
           });
@@ -94,7 +95,7 @@ const Login = () => {
               ? "Internal server error!"
               : "Something went wrong!"),
           {
-            position: "top-right",
+            position: "bottom-right",
             autoClose: 800,
             toastId: customId2,
           }
@@ -174,15 +175,24 @@ const Login = () => {
                   type="button"
                   value="submit"
                   onClick={handleSubmit}
-                  className="btn btn-dark mb-2"
+                  className="px-3 py-1 transition-all duration-300 rounded mb-2 text-[17px] bg-btn-bg hover:bg-btn-hover text-btnText"
                   disabled={loading}
                 >
-                  {loading ? "Loading..." : "Login"}
+                  {loading ? (
+                    <Spinner animation="grow" size="sm" variant="light" />
+                  ) : (
+                    "Login"
+                  )}
                 </button>
 
                 <p>
                   Don't have an account?{" "}
-                  <Link to="/register">Register Here</Link>
+                  <Link
+                    className="text-btn-bg hover:text-btn-hover hover:underline-offset-4 hover:underline"
+                    to="/register"
+                  >
+                    Register Here
+                  </Link>
                 </p>
               </form>
             </div>

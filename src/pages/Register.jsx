@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "./login.css";
 import axios from "axios";
 import { useApiUrl } from "../App";
 import { useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 const Register = (props) => {
   const API_URL = useApiUrl();
@@ -211,14 +212,24 @@ const Register = (props) => {
                   type="button"
                   value="submit"
                   onClick={handleSubmit}
-                  className="btn btn-dark mb-2"
+                  className="px-3 py-1 rounded mb-2 text-[17px] bg-btn-bg hover:bg-btn-hover text-btnText"
                   disabled={loading}
                 >
-                  {loading ? "Loading..." : "Register"}
+                  {loading ? (
+                    <Spinner animation="grow" size="sm" variant="light" />
+                  ) : (
+                    "Register"
+                  )}
                 </button>
 
                 <p>
-                  Already Registered? <Link to="/login">Login Here</Link>
+                  Already Registered?{" "}
+                  <Link
+                    className="text-btn-bg-hover hover:underline-offset-4 hover:underline"
+                    to="/login"
+                  >
+                    Login Here
+                  </Link>
                 </p>
               </form>
             </div>

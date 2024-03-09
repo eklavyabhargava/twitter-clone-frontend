@@ -20,7 +20,11 @@
 
 .username {
     font-weight: bold;
-    padding-left: 0;
-    border: none;
-    background-color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+    .user-img {
+        display: flex;
+        justify-content: center;
+    }
 }

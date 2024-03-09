@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useApiUrl } from "../App";
-import { reAuthenticate } from "../routes/authRoute";
+import { reAuthenticate } from "../routes/AuthRoute";
 import { useSelector } from "react-redux";
 
 const TweetReplies = ({

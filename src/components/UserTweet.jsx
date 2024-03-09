@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useApiUrl } from "../App";
 import { useNavigate } from "react-router-dom";
-import { reAuthenticate } from "../routes/authRoute";
+import { reAuthenticate } from "../routes/AuthRoute";
 import Loading from "./loading";
+import { useSelector } from "react-redux";
 
 const UserTweet = ({
   userId,
@@ -21,9 +22,9 @@ const UserTweet = ({
   const navigate = useNavigate();
   const [tweets, setTweets] = useState([]);
   const [replyMsg, setReplyMsg] = useState("");
+  const user = useSelector((state) => state.user);
 
   const toastId = "customID1";
-  const toastId2 = "customID2";
 
   const closeButtonRef = useRef();
 
@@ -33,7 +34,6 @@ const UserTweet = ({
     navigate("/login");
   }
   const token = userData?.token;
-  const loggedInUserId = userData?.userId;
 
   // like tweet
   const likeTweet = async (e, postId) => {
@@ -55,10 +55,19 @@ const UserTweet = ({
 
   // Retweet
   const Retweet = async (e, postId) => {
+    const postIndex = tweets.findIndex((tweet) => tweet._id === postId);
+    if (tweets[postIndex]?.retweetBy.includes(user._id)) {
+      toast.error("Already retweeted!", {
+        position: "bottom-right",
+        delay: 500,
+        toastId: toastId,
+      });
+      return;
+    }
     // call handleRetweet function
     await handleRetweet(e, postId);
 
-    // update tweets
+    // // update tweets
     allTweet();
   };
 
@@ -105,7 +114,7 @@ const UserTweet = ({
   useEffect(() => {
     allTweet();
     // eslint-disable-next-line
-  }, []);
+  }, [userId]);
 
   return (
     <>
@@ -122,7 +131,7 @@ const UserTweet = ({
                   style={{ maxWidth: "95%" }}
                   key={tweet._id}
                 >
-                  {tweet.tweetedBy._id === loggedInUserId && (
+                  {tweet.tweetedBy._id === user._id && (
                     <button
                       className="trash-icon"
                       onClick={(e) => deleteTweet(e, tweet._id)}
@@ -178,9 +187,7 @@ const UserTweet = ({
                         >
                           <i
                             className={
-                              tweet.likes
-                                .map((like) => like._id)
-                                .includes(loggedInUserId)
+                              tweet.likes.includes(user._id)
                                 ? "fa-solid fa-heart pt-2"
                                 : "fa-regular fa-heart pt-2"
                             }
