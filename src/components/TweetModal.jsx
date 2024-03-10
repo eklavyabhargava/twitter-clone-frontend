@@ -78,7 +78,7 @@ const TweetModal = ({ closeButtonRef, handleTweet }) => {
           </button>
           <button
             type="button"
-            onClick={handleTweet}
+            onClick={() => handleTweet(content)}
             className="bg-btn-bg hover:bg-btn-hover px-3 py-2 rounded text-white"
           >
             Tweet

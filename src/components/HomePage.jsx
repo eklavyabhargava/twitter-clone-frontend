@@ -21,7 +21,6 @@ const HomePage = ({
   // api url
   const API_URL = useApiUrl();
 
-  const [content, setContent] = useState("");
   const navigate = useNavigate();
   const closeButtonRef = useRef();
 
@@ -33,7 +32,7 @@ const HomePage = ({
 
   const token = userData?.token;
 
-  const handleTweet = () => {
+  const handleTweet = (content) => {
     const loading = toast.loading("Loading...", { toastId: customId });
 
     // check for blank content msg

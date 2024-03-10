@@ -60,7 +60,7 @@ export default function AuthRoutes() {
 
   useEffect(() => {
     refreshUserData();
-  }, []);
+  });
 
   // get logged in user data
   const userData = JSON.parse(localStorage.getItem("userData"));
