@@ -30,6 +30,8 @@ const Profile = ({
 
   useEffect(() => {
     getUserInfo();
+
+    //eslint-disable-next-line
   }, [userId]);
 
   return (
