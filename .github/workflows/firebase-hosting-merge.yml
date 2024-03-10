@@ -10,7 +10,7 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     env:
-      REACT_APP_API_URL: https://twitter-clone-backend-s3iz.onrender.com
+      REACT_APP_API_URL: https://nice-pear-sundress.cyclic.app
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
