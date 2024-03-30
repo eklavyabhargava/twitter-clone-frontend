@@ -129,8 +129,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
           closeButtonRef.current.click();
           setUpdatingInfo(false);
           dispatch(userInfo);
-        }
-        if (response.status === 401) {
+        } else if (response.status === 401) {
           setUpdatingInfo(false);
           closeButtonRef.current.click();
           reAuthenticate();
