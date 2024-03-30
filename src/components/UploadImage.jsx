@@ -1,6 +1,11 @@
 import { toast } from "react-toastify";
+import Spinner from "react-bootstrap/Spinner";
 
-const UploadImage = ({ closeButtonRef, uploadProfilePic }) => {
+const UploadImage = ({
+  closeButtonRef,
+  uploadProfilePic,
+  isImageUploading,
+}) => {
   const toastId = "Toast12";
 
   const previewImg = (e) => {
@@ -116,10 +121,15 @@ const UploadImage = ({ closeButtonRef, uploadProfilePic }) => {
           </button>
           <button
             type="button"
+            disabled={isImageUploading}
             onClick={uploadProfilePic}
             className="px-3 py-2 bg-btn-bg hover:bg-btn-hover text-btnText rounded"
           >
-            Save Profile Pic
+            {isImageUploading ? (
+              <Spinner animation="grow" size="sm" variant="light" />
+            ) : (
+              "Update Profile Pic"
+            )}
           </button>
         </div>
       </div>

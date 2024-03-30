@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import Spinner from "react-bootstrap/Spinner";
 
 const EditProfileModal = ({
   userInfo,
   setUserInfo,
   closeButtonRef,
   editProfile,
+  isUpdatingInfo,
 }) => {
   const [newData, setData] = useState({});
 
@@ -15,7 +17,7 @@ const EditProfileModal = ({
   };
 
   useEffect(() => {
-    setData(userInfo);
+    setData(userInfo ?? {});
   }, [userInfo, closeButtonRef]);
 
   const handleSave = () => {
@@ -100,10 +102,15 @@ const EditProfileModal = ({
           </button>
           <button
             type="button"
+            disabled={isUpdatingInfo}
             className="px-3 py-2 bg-btn-bg hover:bg-btn-hover text-btnText rounded"
             onClick={handleSave}
           >
-            Save
+            {isUpdatingInfo ? (
+              <Spinner animation="grow" size="sm" variant="light" />
+            ) : (
+              "Update"
+            )}
           </button>
         </div>
       </div>

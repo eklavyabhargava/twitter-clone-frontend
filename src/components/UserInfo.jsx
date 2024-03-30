@@ -18,6 +18,8 @@ const UserInfo = ({ userData, userId, onApiError }) => {
   const [followers, setFollowers] = useState(userInfo?.followers ?? []);
   const user = useSelector((state) => state.user);
   const [disableBtn, setDisableBtn] = useState(false);
+  const [isImageUploading, setImageUploading] = useState(false);
+  const [isUpdatingInfo, setUpdatingInfo] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -100,13 +102,14 @@ const UserInfo = ({ userData, userId, onApiError }) => {
 
   // request to change profile info
   const editProfile = async () => {
-    if (!userInfo.name || !userInfo.location || !userInfo.dob) {
+    if (!userInfo.name) {
       toast.error("Mandatory fields are missing!", {
         position: "bottom-right",
         autoClose: 500,
         toastId: toastId2,
       });
     } else {
+      setUpdatingInfo(true);
       try {
         const response = await axios.put(
           `${API_URL}/api/user/edit-profile/${userId}`,
@@ -124,12 +127,17 @@ const UserInfo = ({ userData, userId, onApiError }) => {
             toastId: toastId,
           });
           closeButtonRef.current.click();
+          setUpdatingInfo(false);
           dispatch(userInfo);
         }
         if (response.status === 401) {
+          setUpdatingInfo(false);
+          closeButtonRef.current.click();
           reAuthenticate();
           return;
         } else {
+          setUpdatingInfo(false);
+          closeButtonRef.current.click();
           toast.error(response.data.errMsg || "Some Error Occurred!", {
             position: "bottom-right",
             autoClose: 500,
@@ -137,6 +145,8 @@ const UserInfo = ({ userData, userId, onApiError }) => {
           });
         }
       } catch (error) {
+        closeButtonRef.current.click();
+        setUpdatingInfo(false);
         onApiError(error);
       }
     }
@@ -153,6 +163,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
         toastId: toastId,
       });
     } else {
+      setImageUploading(true);
       const formData = new FormData();
       formData.append("profilePic", imgFile);
 
@@ -168,6 +179,8 @@ const UserInfo = ({ userData, userId, onApiError }) => {
           }
         );
         if (response.data.isSuccess) {
+          setImageUploading(false);
+          closeButtonRef.current.click();
           toast.success(response.data.msg, {
             position: "bottom-right",
             autoClose: 500,
@@ -178,14 +191,16 @@ const UserInfo = ({ userData, userId, onApiError }) => {
 
           dispatch(updateUserData(user));
         } else {
+          setImageUploading(false);
+          closeButtonRef.current.click();
           toast.error(response.data.errMsg || "Some Error Occurred!", {
             position: "bottom-right",
             autoClose: 500,
             toastId: toastId2,
           });
         }
-        closeButtonRef.current.click();
       } catch (error) {
+        setImageUploading(false);
         closeButtonRef.current.click();
         onApiError(error);
       }
@@ -249,6 +264,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
             aria-hidden="true"
           >
             <UploadImage
+              isImageUploading={isImageUploading}
               uploadProfilePic={uploadProfilePic}
               closeButtonRef={closeButtonRef}
             />
@@ -264,6 +280,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
             aria-hidden="true"
           >
             <EditProfileModal
+              isUpdatingInfo={isUpdatingInfo}
               editProfile={editProfile}
               closeButtonRef={closeButtonRef}
               userInfo={userInfo}
