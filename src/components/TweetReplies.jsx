@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useApiUrl } from "../App";
 import { useSelector } from "react-redux";
 
 const TweetReplies = ({
@@ -13,8 +12,6 @@ const TweetReplies = ({
   getProfile,
   tweetInfo,
 }) => {
-  // api url
-  const API_URL = useApiUrl();
   const user = useSelector((state) => state.user);
   const [tweetDetail, setTweetDetail] = useState({});
   const [replyMsg, setReplyMsg] = useState("");
