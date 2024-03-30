@@ -18,7 +18,7 @@ const UploadImage = ({ closeButtonRef, uploadProfilePic }) => {
         return;
       }
 
-      // Check if the file size is within the limit (2MB)
+      // Check if the file size is within the limit (5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error(
           "File size exceeds 5MB limit. Please choose a smaller file.",
@@ -41,7 +41,7 @@ const UploadImage = ({ closeButtonRef, uploadProfilePic }) => {
 
         img.onload = () => {
           // Check if the image is square
-          if (img.width === img.height) {
+          if (Math.abs(img.width - img.height) <= 10) {
             // Display the image in the preview
             imageElement.src = reader.result;
             imageElement.classList.remove("d-none");
