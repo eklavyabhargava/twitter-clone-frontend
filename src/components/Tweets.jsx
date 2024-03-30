@@ -94,8 +94,7 @@ const Tweets = ({
         observer.unobserve(thirdLastTweetRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tweets]);
+  }, [tweets, thirdLastTweetRef, allTweet]);
 
   // call function allTweet
   useEffect(() => {
