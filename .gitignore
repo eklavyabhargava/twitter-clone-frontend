@@ -8,6 +8,7 @@
 /.firebase
 /build
 firebase-debug.txt
+/.github/workflows
 
 # testing
 /coverage
