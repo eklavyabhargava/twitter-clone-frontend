@@ -1,9 +1,7 @@
 import Modal from "react-bootstrap/Modal";
-import { useApiUrl } from "../App";
 import { useNavigate } from "react-router-dom";
 
 function SearchModal({ users, onClose, searchTerm }) {
-  const API_URL = useApiUrl();
   const navigate = useNavigate();
 
   const navigateToProfile = (userId) => {

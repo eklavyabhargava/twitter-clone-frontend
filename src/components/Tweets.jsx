@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./tweets.css";
-import { useApiUrl } from "../App";
 import Loading from "./loading";
 import { useSelector } from "react-redux";
 
@@ -18,8 +17,6 @@ const Tweets = ({
   tweets,
   onApiError,
 }) => {
-  // api url
-  const API_URL = useApiUrl();
   const thirdLastTweetRef = useRef(null);
   const user = useSelector((state) => state.user);
   const [replyMsg, setReplyMsg] = useState("");

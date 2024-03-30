@@ -2,7 +2,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./profile.css";
 import UserInfo from "../components/UserInfo";
 import UserTweet from "../components/UserTweet";
-import { useApiUrl } from "../App";
 import Loading from "../components/loading";
 import { useEffect, useState } from "react";
 
@@ -15,9 +14,6 @@ const Profile = ({
   tweetReply,
   onApiError,
 }) => {
-  // api url
-  const API_URL = useApiUrl();
-
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
