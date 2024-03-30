@@ -6,6 +6,7 @@ import Loading from "./loading";
 import { useSelector } from "react-redux";
 
 const Tweets = ({
+  likeUnlikeTweet,
   isTweetFetching,
   getProfile,
   handleDelete,
@@ -31,7 +32,7 @@ const Tweets = ({
     await handleLike(e, postId);
 
     // update tweets
-    allTweet();
+    likeUnlikeTweet(postId);
   };
 
   // delete tweet
@@ -176,7 +177,7 @@ const Tweets = ({
                   <p className="card-text">{tweet.content}</p>
                   {tweet.image && (
                     <img
-                      className="img-fluid h-[500px] mx-auto w-auto mt-2"
+                      className="img-fluid max-h-[500px] md:h-[500px] mx-auto w-auto mt-2"
                       src={tweet.image}
                       alt=""
                     />

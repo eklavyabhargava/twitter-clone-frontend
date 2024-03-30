@@ -7,6 +7,7 @@ import Tweet from "./Tweets";
 import { useApiUrl } from "../App";
 import { reAuthenticate } from "../routes/AuthRoute";
 import TweetModal from "./TweetModal";
+import { useSelector } from "react-redux";
 
 const HomePage = ({
   tweetDetailPage,
@@ -24,11 +25,37 @@ const HomePage = ({
   const closeButtonRef = useRef();
   const [page, setPage] = useState(1);
   const [tweets, setTweets] = useState([]);
+  const user = useSelector((state) => state.user);
   const [isTweetFetching, setTweetFetching] = useState(false);
   let hasMoreTweets = true;
 
   const customId = "customId1";
   const userData = JSON.parse(localStorage.getItem("userData"));
+
+  const likeUnlikeTweet = (tweetId) => {
+    setTweets((prevTweets) =>
+      prevTweets.map((tweet) => {
+        if (tweet._id === tweetId) {
+          const likedByCurrentUser = tweet.likes.some(
+            (like) => like._id === user._id
+          );
+          if (likedByCurrentUser) {
+            // User has already liked the tweet, remove their ID from likes
+            tweet.likes = tweet.likes.filter((like) => like._id !== user._id);
+          } else {
+            // User has not liked the tweet, include their ID in likes
+            tweet.likes.push({
+              _id: user._id,
+              name: user.name,
+              username: user.username,
+              profilePic: user.profilePic,
+            });
+          }
+        }
+        return tweet;
+      })
+    );
+  };
 
   // get all tweets
   const allTweet = () => {
@@ -153,6 +180,7 @@ const HomePage = ({
   return (
     <div className="mt-1 pt-1 w-full">
       <Tweet
+        likeUnlikeTweet={likeUnlikeTweet}
         isTweetFetching={isTweetFetching}
         tweets={tweets}
         allTweet={allTweet}
