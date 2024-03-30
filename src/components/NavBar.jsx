@@ -239,7 +239,7 @@ export default function NavBar({ onApiError, token }) {
                     <img
                       className="h-8 w-8 rounded-2xl"
                       id="profilePic"
-                      src={`${API_URL}/profile/${user?.profilePic}`}
+                      src={user?.profilePic}
                       alt=""
                     />
                     <span className="ml-2 text-sm font-normal text-gray-700 group-hover:text-gray-800">
@@ -256,7 +256,10 @@ export default function NavBar({ onApiError, token }) {
       <Modal
         show={showSearchModal}
         fullscreen
-        onHide={() => setSearchModal(false)}
+        onHide={() => {
+          setSearchTerm("");
+          setSearchModal(false);
+        }}
         contentClassName="max-w-xl mx-auto"
       >
         <Modal.Header>

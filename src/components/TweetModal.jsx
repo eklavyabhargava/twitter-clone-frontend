@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TweetModal = ({ closeButtonRef, handleTweet }) => {
   const [content, setContent] = useState("");
@@ -17,6 +17,10 @@ const TweetModal = ({ closeButtonRef, handleTweet }) => {
       };
     } catch (error) {}
   };
+
+  useEffect(() => {
+    setContent("");
+  }, [closeButtonRef]);
 
   return (
     <div className="modal-dialog">

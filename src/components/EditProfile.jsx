@@ -1,13 +1,29 @@
+import { useEffect, useState } from "react";
+
 const EditProfileModal = ({
   userInfo,
   setUserInfo,
   closeButtonRef,
   editProfile,
 }) => {
-  const handleDataChange = ({ target: { name, value } }) => {
-    setUserInfo((currData) => {
+  const [newData, setData] = useState({});
+
+  const handleChange = ({ target: { name, value } }) => {
+    setData((currData) => {
       return { ...currData, [name]: value };
     });
+  };
+
+  useEffect(() => {
+    setData(userInfo);
+  }, [userInfo, closeButtonRef]);
+
+  const handleSave = () => {
+    setUserInfo((currData) => {
+      return { ...currData, ...newData };
+    });
+
+    editProfile();
   };
 
   return (
@@ -32,11 +48,11 @@ const EditProfileModal = ({
             <input
               type="text"
               name="name"
-              value={userInfo?.name}
-              onChange={(e) => handleDataChange(e)}
+              value={newData?.name}
+              onChange={(e) => handleChange(e)}
               className="form-control"
               id="name"
-              placeholder={userInfo?.name}
+              placeholder={newData?.name}
             />
           </div>
           <div className="mb-3">
@@ -46,11 +62,11 @@ const EditProfileModal = ({
             <input
               type="text"
               name="location"
-              value={userInfo?.location}
-              onChange={(e) => handleDataChange(e)}
+              value={newData?.location}
+              onChange={(e) => handleChange(e)}
               className="form-control"
               id="location"
-              placeholder={userInfo?.location}
+              placeholder={newData?.location}
             />
           </div>
           <div className="mb-3">
@@ -61,14 +77,14 @@ const EditProfileModal = ({
               type="date"
               name="dob"
               value={
-                userInfo?.dob
-                  ? new Date(userInfo.dob).toISOString().split("T")[0]
+                newData?.dob
+                  ? new Date(newData.dob).toISOString().split("T")[0]
                   : ""
               }
-              onChange={(e) => handleDataChange(e)}
+              onChange={(e) => handleChange(e)}
               className="form-control"
               id="dob"
-              placeholder={userInfo?.dob}
+              placeholder={newData?.dob}
               max={new Date().toISOString().split("T")[0]}
             />
           </div>
@@ -85,9 +101,7 @@ const EditProfileModal = ({
           <button
             type="button"
             className="px-3 py-2 bg-btn-bg hover:bg-btn-hover text-btnText rounded"
-            onClick={() => {
-              editProfile();
-            }}
+            onClick={handleSave}
           >
             Save
           </button>

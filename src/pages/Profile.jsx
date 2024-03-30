@@ -44,7 +44,7 @@ const Profile = ({
             <div className="profile mb-2">
               <img
                 className="img-fluid mb-0 pb-0 rounded-circle ms-3 position-relative top-100 start-0 translate-middle-y"
-                src={`${API_URL}/${userId}/profile-pic`}
+                src={userInfo.profilePic}
                 alt=""
               />
             </div>

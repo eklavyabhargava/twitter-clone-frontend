@@ -9,6 +9,7 @@ const ApiContext = createContext();
 
 function App() {
   const API_URL = process.env.REACT_APP_API_URL;
+
   return (
     <ApiContext.Provider value={API_URL}>
       <ToastContainer draggable />

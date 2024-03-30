@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useApiUrl } from "../App";
-import { reAuthenticate } from "../routes/AuthRoute";
 import { useSelector } from "react-redux";
 
 const TweetReplies = ({
@@ -23,12 +22,6 @@ const TweetReplies = ({
   const navigate = useNavigate();
 
   const toastId = "toastId1";
-
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  if (!userData) {
-    reAuthenticate();
-    navigate("/login");
-  }
 
   // tweet reply to someone's post
   const handleTweetReply = async (e, replyId) => {
@@ -115,7 +108,7 @@ const TweetReplies = ({
                   <div className="user-img ps-3 mt-4 pt-1">
                     <img
                       className="img-fluid rounded-circle"
-                      src={`${API_URL}/${reply.tweetedBy._id}/profile-pic`}
+                      src={reply.tweetedBy.profilePic}
                       alt=""
                     />
                   </div>

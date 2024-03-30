@@ -1,6 +1,5 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./homePage.css";
@@ -21,14 +20,70 @@ const HomePage = ({
   // api url
   const API_URL = useApiUrl();
 
-  const navigate = useNavigate();
+  const toastId = "Toast1";
   const closeButtonRef = useRef();
+  const [page, setPage] = useState(1);
+  const [tweets, setTweets] = useState([]);
+  const [isTweetFetching, setTweetFetching] = useState(false);
+  let hasMoreTweets = true;
 
   const customId = "customId1";
   const userData = JSON.parse(localStorage.getItem("userData"));
-  if (!userData) {
-    navigate("/login");
-  }
+
+  // get all tweets
+  const allTweet = () => {
+    if (isTweetFetching || !hasMoreTweets) return;
+    setTweetFetching(true);
+
+    axios
+      .get(`${API_URL}/api/tweet/get-tweets?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.isSuccess) {
+          setPage((curr) => curr + 1);
+          const newTweets = response.data.tweets;
+          if (newTweets.length === 0) {
+            hasMoreTweets = false; // No more tweets available
+          } else {
+            setTweets((prevTweets) => [...prevTweets, ...newTweets]);
+          }
+        } else {
+          toast.error("Something went wrong!", {
+            position: "bottom-right",
+            delay: 500,
+            toastId: toastId,
+          });
+        }
+        setTweetFetching(false);
+      })
+      .catch((error) => {
+        if (error.response?.status !== 500) {
+          toast.error(error.response.data.errMsg || "Something went wrong!", {
+            position: "bottom-right",
+            delay: 500,
+            toastId: toastId,
+          });
+          if (error.response?.status === 401) {
+            toast.error(error.response.data.errMsg || "Please login again", {
+              position: "bottom-right",
+              delay: 500,
+              toastId: toastId,
+            });
+            reAuthenticate();
+          }
+        } else {
+          toast.error("Internal server error!", {
+            position: "bottom-right",
+            delay: 500,
+            toastId: toastId,
+          });
+        }
+        setTweetFetching(false);
+      });
+  };
 
   const token = userData?.token;
 
@@ -42,6 +97,7 @@ const HomePage = ({
         type: "error",
         isLoading: false,
         autoClose: 500,
+        position: "bottom-right",
       });
     } else {
       // get the image file from input element
@@ -78,20 +134,17 @@ const HomePage = ({
         })
         .catch((error) => {
           closeButtonRef.current.click();
-          toast.error(
-            error.response.data.errMsg ??
-              (error.response.status === 500
+          toast.update(loading, {
+            render:
+              error.response.status === 500
                 ? "Internal server error!"
-                : "Some Error Occurred!"),
-            {
-              position: "bottom-right",
-              autoClose: 500,
-              toastId: "toast",
-            }
-          );
+                : "Some Error Occurred!",
+            isLoading: false,
+            type: "error",
+            autoClose: 500,
+          });
           if (error.response.status === 401) {
             reAuthenticate();
-            navigate("/login");
           }
         });
     }
@@ -100,6 +153,9 @@ const HomePage = ({
   return (
     <div className="mt-1 pt-1 w-full">
       <Tweet
+        isTweetFetching={isTweetFetching}
+        tweets={tweets}
+        allTweet={allTweet}
         tweetReply={tweetReply}
         tweetDetailPage={tweetDetailPage}
         handleLike={handleLike}

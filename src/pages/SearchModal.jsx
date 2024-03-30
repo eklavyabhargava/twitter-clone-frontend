@@ -25,7 +25,7 @@ function SearchModal({ users, onClose, searchTerm }) {
             >
               <img
                 className="img-fluid h-[40px] rounded-3xl mr-2"
-                src={`${API_URL}/${user._id}/profile-pic`}
+                src={user.profilePic}
                 alt=""
               />
               <div>

@@ -5,8 +5,6 @@ import { toast } from "react-toastify";
 import TweetInfo from "../components/TweetDetail";
 import TweetReplies from "../components/TweetReplies";
 import { useApiUrl } from "../App";
-import { useNavigate } from "react-router-dom";
-import { reAuthenticate } from "../routes/AuthRoute";
 
 const TweetDetail = ({
   tweetReply,
@@ -19,7 +17,6 @@ const TweetDetail = ({
 }) => {
   // api url
   const API_URL = useApiUrl();
-  const navigate = useNavigate();
 
   const { tweetId } = useParams();
   const [tweetDetail, setTweetDetail] = useState([]);
@@ -27,10 +24,6 @@ const TweetDetail = ({
   const toastId = "toastId1";
 
   const userData = JSON.parse(localStorage.getItem("userData"));
-  if (!userData) {
-    reAuthenticate();
-    navigate("/login");
-  }
 
   // get tweet detail
   const getTweetDetail = async () => {
