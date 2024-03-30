@@ -1,9 +1,9 @@
-const Loading = () => {
+const Loading = ({ width, height }) => {
   return (
     <div
       style={{
-        width: "100%",
-        height: "100vh",
+        width: width ?? "100%",
+        height: height ?? "100vh",
         alignItems: "center",
       }}
       className="d-flex justify-content-center"

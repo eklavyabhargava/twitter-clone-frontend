@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "react-bootstrap/Spinner";
@@ -15,6 +15,7 @@ const Login = () => {
   const API_URL = useApiUrl();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoginSuccess, setLogin] = useState(false);
   const [credentials, setCredentials] = useState({
     usernameOrEmailId: "",
     password: "",
@@ -53,17 +54,18 @@ const Login = () => {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     const isValidData = validateForm();
     if (!isValidData) {
       return;
     }
     setLoading(true);
-    e.preventDefault();
 
     axios
       .post(`${API_URL}/api/auth/login`, { ...credentials })
       .then((response) => {
         if (response.data.isSuccess) {
+          console.log(response.data);
           localStorage.setItem(
             "userData",
             JSON.stringify({
@@ -76,8 +78,10 @@ const Login = () => {
             autoClose: 800,
             toastId: customId1,
           });
-          navigate("/");
           setLoading(false);
+          dispatch(setUser(response.data.user)).then(() => {
+            setLogin(true);
+          });
         } else {
           toast.error(response.data.errMsg ?? "Something went wrong!", {
             position: "bottom-right",
@@ -104,9 +108,17 @@ const Login = () => {
       });
   };
 
-  if (localStorage.getItem("userData")) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (isLoginSuccess) {
+      navigate("/");
+    }
+  }, [isLoginSuccess, navigate]);
+
+  useEffect(() => {
+    if (localStorage.getItem("userData")) {
+      navigate("/");
+    }
+  });
 
   const handleDataChange = ({ target: { name, value } }) => {
     setCredentials((prevData) => {
@@ -120,7 +132,7 @@ const Login = () => {
         className="card mb-3 mx-auto rounded-3"
         style={{ maxWidth: "740px" }}
       >
-        <div className="row g-0">
+        <div className="row g-0 cursor-default" onClick={() => {}}>
           <div
             className="col-md-5 login-image text-center rounded-start"
             style={{ backgroundColor: "#5dabfc" }}
@@ -173,7 +185,6 @@ const Login = () => {
                 </div>
                 <button
                   type="button"
-                  value="submit"
                   onClick={handleSubmit}
                   className="px-3 py-1 transition-all duration-300 rounded mb-2 text-[17px] bg-btn-bg hover:bg-btn-hover text-btnText"
                   disabled={loading}

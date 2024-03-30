@@ -2,34 +2,31 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./tweets.css";
-import axios from "axios";
 import { useApiUrl } from "../App";
 import Loading from "./loading";
 import { useSelector } from "react-redux";
-import { reAuthenticate } from "../routes/AuthRoute";
-import { useNavigate } from "react-router-dom";
 
 const Tweets = ({
+  isTweetFetching,
   getProfile,
   handleDelete,
   handleLike,
   handleRetweet,
   tweetDetailPage,
   tweetReply,
+  allTweet,
+  tweets,
   onApiError,
 }) => {
   // api url
   const API_URL = useApiUrl();
+  const thirdLastTweetRef = useRef(null);
   const user = useSelector((state) => state.user);
-  const [tweets, setTweets] = useState([]);
   const [replyMsg, setReplyMsg] = useState("");
-  const navigate = useNavigate();
 
   const closeButtonRef = useRef();
 
   const toastId = "customID123";
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const token = userData?.token;
 
   // like tweet
   const likeTweet = async (e, postId) => {
@@ -77,50 +74,30 @@ const Tweets = ({
     closeButtonRef.current.click();
   };
 
-  // get all tweets
-  const allTweet = () => {
-    axios
-      .get(`${API_URL}/api/tweet/get-tweets`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        if (response.data.isSuccess) {
-          setTweets(response.data.tweets);
-        } else {
-          toast.error("Something went wrong!", {
-            position: "bottom-right",
-            delay: 500,
-            toastId: toastId,
-          });
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Check if the target element is intersecting (i.e., coming into view)
+        if (entries[0].isIntersecting) {
+          allTweet();
         }
-      })
-      .catch((error) => {
-        if (error.response?.status !== 500) {
-          toast.error(error.response.data.errMsg || "Something went wrong!", {
-            position: "bottom-right",
-            delay: 500,
-            toastId: toastId,
-          });
-          if (error.response?.status === 401) {
-            toast.error(error.response.data.errMsg || "Please login again", {
-              position: "bottom-right",
-              delay: 500,
-              toastId: toastId,
-            });
-            reAuthenticate();
-            navigate("/login");
-          }
-        } else {
-          toast.error("Internal server error!", {
-            position: "bottom-right",
-            delay: 500,
-            toastId: toastId,
-          });
-        }
-      });
-  };
+      },
+      {
+        threshold: 0.5, // Trigger when the element is 50% visible
+      }
+    );
+
+    if (thirdLastTweetRef.current) {
+      observer.observe(thirdLastTweetRef.current);
+    }
+
+    // Cleanup function to disconnect the observer when the component unmounts
+    return () => {
+      if (thirdLastTweetRef.current) {
+        observer.unobserve(thirdLastTweetRef.current);
+      }
+    };
+  }, [tweets]);
 
   // call function allTweet
   useEffect(() => {
@@ -133,7 +110,7 @@ const Tweets = ({
       {!tweets || Object.keys(tweets) === 0 ? (
         <Loading />
       ) : (
-        tweets.map((tweet) => (
+        tweets.map((tweet, index) => (
           <div
             onClick={() => {
               tweetDetailPage(tweet._id);
@@ -142,6 +119,9 @@ const Tweets = ({
             className="card border-x-0 border-t-0 w-full my-2 py-1"
             style={{ maxWidth: "95%" }}
           >
+            {index === tweets.length - 3 ? (
+              <div ref={thirdLastTweetRef}></div>
+            ) : null}
             {tweet.tweetedBy._id === user._id && (
               <button
                 className="trash-icon"
@@ -175,7 +155,7 @@ const Tweets = ({
               <div className="user-img flex mt-2 flex-row">
                 <img
                   className="img-fluid rounded-circle"
-                  src={`${API_URL}/${tweet.tweetedBy._id}/profile-pic`}
+                  src={tweet.tweetedBy.profilePic}
                   alt=""
                 />
                 <div className="flex flex-col ml-3 my-auto leading-tight">
@@ -200,7 +180,7 @@ const Tweets = ({
                   {tweet.image && (
                     <img
                       className="img-fluid h-[500px] mx-auto w-auto mt-2"
-                      src={`${API_URL}/post-image/${tweet._id}`}
+                      src={tweet.image}
                       alt=""
                     />
                   )}
@@ -323,6 +303,7 @@ const Tweets = ({
           </div>
         ))
       )}
+      {isTweetFetching && <Loading height={100} />}
     </div>
   );
 };

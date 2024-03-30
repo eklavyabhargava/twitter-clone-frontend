@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useApiUrl } from "../App";
-import { reAuthenticate } from "../routes/AuthRoute";
 import Loading from "./loading";
 import { useSelector } from "react-redux";
 
@@ -21,14 +19,7 @@ const TweetInfo = ({
   const [tweetDetail, setTweetDetail] = useState({});
   const [replyMsg, setReplyMsg] = useState("");
   const closeButtonRef = useRef();
-  const navigate = useNavigate();
   const toastId = "toastId1";
-
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  if (!userData) {
-    reAuthenticate();
-    navigate("/login");
-  }
 
   // tweet reply to someone's post
   const handleTweetReply = async (e, replyId) => {
@@ -82,7 +73,7 @@ const TweetInfo = ({
             <div className="user-img ps-3 pt-2">
               <img
                 className="img-fluid rounded-circle"
-                src={`${API_URL}/${tweetDetail.tweetedBy._id}/profile-pic`}
+                src={tweetDetail.tweetedBy.profilePic}
                 alt=""
               />
             </div>
@@ -104,7 +95,7 @@ const TweetInfo = ({
               {tweetDetail.image && (
                 <img
                   className="img-fluid"
-                  src={`${API_URL}/post-image/${tweetDetail._id}`}
+                  src={tweetDetail.profilePic}
                   alt=""
                 />
               )}

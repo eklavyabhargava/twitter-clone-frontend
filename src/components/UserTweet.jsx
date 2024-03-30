@@ -3,8 +3,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useApiUrl } from "../App";
-import { useNavigate } from "react-router-dom";
-import { reAuthenticate } from "../routes/AuthRoute";
 import Loading from "./loading";
 import { useSelector } from "react-redux";
 
@@ -19,7 +17,6 @@ const UserTweet = ({
 }) => {
   // api url
   const API_URL = useApiUrl();
-  const navigate = useNavigate();
   const [tweets, setTweets] = useState([]);
   const [replyMsg, setReplyMsg] = useState("");
   const user = useSelector((state) => state.user);
@@ -29,10 +26,6 @@ const UserTweet = ({
   const closeButtonRef = useRef();
 
   const userData = JSON.parse(localStorage.getItem("userData"));
-  if (!userData) {
-    reAuthenticate();
-    navigate("/login");
-  }
   const token = userData?.token;
 
   // like tweet
@@ -153,7 +146,7 @@ const UserTweet = ({
                       <div className="user-img ps-3 pt-2">
                         <img
                           className="img-fluid rounded-circle"
-                          src={`${API_URL}/${tweet.tweetedBy._id}/profile-pic`}
+                          src={tweet.tweetedBy.profilePic}
                           alt=""
                         />
                       </div>
@@ -173,11 +166,7 @@ const UserTweet = ({
                       <div className="card-body ps-1 pt-2">
                         <p className="card-text">{tweet.content}</p>
                         {tweet.image && (
-                          <img
-                            className="img-fluid"
-                            src={`${API_URL}/post-image/${tweet._id}`}
-                            alt=""
-                          />
+                          <img className="img-fluid" src={tweet.image} alt="" />
                         )}
                         <button
                           className="post-button me-3"

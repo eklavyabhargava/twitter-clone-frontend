@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useApiUrl } from "../App";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { followUser, unfollowUser } from "../shared/actions";
+import { followUser, unfollowUser, updateUserData } from "../shared/actions";
 import { reAuthenticate } from "../routes/AuthRoute";
 import { useSelector } from "react-redux";
 import UploadImage from "./UploadImage";
@@ -53,7 +53,6 @@ const UserInfo = ({ userData, userId, onApiError }) => {
 
           if (response.status && response.status === 401) {
             reAuthenticate();
-            navigate("/login");
           }
         }
       })
@@ -89,7 +88,6 @@ const UserInfo = ({ userData, userId, onApiError }) => {
 
           if (response.status && response.status === 401) {
             reAuthenticate();
-            navigate("/login");
           }
         }
       })
@@ -130,7 +128,6 @@ const UserInfo = ({ userData, userId, onApiError }) => {
         }
         if (response.status === 401) {
           reAuthenticate();
-          navigate("/login");
           return;
         } else {
           toast.error(response.data.errMsg || "Some Error Occurred!", {
@@ -176,7 +173,10 @@ const UserInfo = ({ userData, userId, onApiError }) => {
             autoClose: 500,
             toastId: toastId,
           });
-          window.location.reload(true);
+          const { profilePic, ...otherData } = userInfo;
+          const user = { ...otherData, profilePic: response.data.profilePic };
+
+          dispatch(updateUserData(user));
         } else {
           toast.error(response.data.errMsg || "Some Error Occurred!", {
             position: "bottom-right",

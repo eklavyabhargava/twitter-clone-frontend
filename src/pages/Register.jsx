@@ -125,7 +125,7 @@ const Register = (props) => {
         className="card mb-3 mx-auto rounded-3"
         style={{ maxWidth: "740px" }}
       >
-        <div className="row g-0">
+        <div className="row g-0 cursor-default">
           <div
             className="col-md-5 login-image text-center rounded-start"
             style={{ backgroundColor: "#5dabfc" }}

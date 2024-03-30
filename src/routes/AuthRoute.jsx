@@ -5,11 +5,11 @@ import TweetDetail from "../pages/TweetDetail";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useApiUrl } from "../App";
-import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../shared/actions";
 import Loading from "../components/loading";
 import NavBar from "../components/NavBar";
+import { useEffect } from "react";
 
 export function reAuthenticate() {
   localStorage.removeItem("userData");
@@ -20,7 +20,50 @@ export default function AuthRoutes() {
   // api url
   const API_URL = useApiUrl();
   const user = useSelector((state) => state.user);
+  let isUserActive = false;
+
   const dispatch = useDispatch();
+
+  // Event listener to track user activity
+  document.addEventListener("mousemove", () => {
+    isUserActive = true;
+  });
+
+  // Function to send active status to server
+  function sendActiveStatus() {
+    if (!userData?.token) return;
+    if (!isUserActive) reAuthenticate();
+    axios
+      .post(
+        `${API_URL}/api/user/active-status`,
+        { activeStatus: isUserActive },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      )
+      .then((response) => {
+        const { data } = response;
+        if (data.isSuccess) {
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({
+              token: data.Token,
+            })
+          );
+        } else {
+          reAuthenticate();
+        }
+      })
+      .catch((error) => {
+        reAuthenticate();
+      });
+    isUserActive = false;
+  }
+
+  // Send active status every hour
+  setInterval(sendActiveStatus, 60 * 60 * 1000);
 
   function onApiError(error) {
     toast.error(
@@ -36,31 +79,8 @@ export default function AuthRoutes() {
     );
     if (error?.response?.status && error.response.status === 401) {
       reAuthenticate();
-      navigate("/login");
     }
   }
-
-  const refreshUserData = async () => {
-    if (!user && userData) {
-      try {
-        const response = await axios.get(`${API_URL}/api/user/get-details`, {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        });
-
-        if (response.data.isSuccess) {
-          dispatch(setUser(response.data.user));
-        }
-      } catch (error) {
-        onApiError(error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    refreshUserData();
-  });
 
   // get logged in user data
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -271,6 +291,28 @@ export default function AuthRoutes() {
   const tweetDetailPage = (tweetId) => {
     navigate(`/tweetDetail/${tweetId}`);
   };
+
+  const refreshUserData = async () => {
+    if (!user && userData) {
+      try {
+        const response = await axios.get(`${API_URL}/api/user/get-details`, {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        });
+
+        if (response.data.isSuccess) {
+          dispatch(setUser(response.data.user));
+        }
+      } catch (error) {
+        onApiError(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    refreshUserData();
+  });
 
   return (
     <>

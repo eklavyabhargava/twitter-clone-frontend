@@ -8,6 +8,7 @@
 
 .card {
     width: 60vw;
+    cursor: default;
 }
 
 .login-image {
