@@ -25,6 +25,7 @@ const HomePage = ({
   const closeButtonRef = useRef();
   const [page, setPage] = useState(1);
   const [tweets, setTweets] = useState([]);
+  const [isTweetPosting, setTweetPosting] = useState(false);
   const user = useSelector((state) => state.user);
   const [isTweetFetching, setTweetFetching] = useState(false);
   let hasMoreTweets = true;
@@ -141,6 +142,7 @@ const HomePage = ({
         formData.append("image", imgFile);
       }
 
+      setTweetPosting(true);
       axios
         .post(`${API_URL}/api/tweet/create-tweet`, formData, {
           headers: {
@@ -149,6 +151,8 @@ const HomePage = ({
           },
         })
         .then((response) => {
+          setTweetPosting(false);
+          closeButtonRef.current.click();
           toast.update(loading, {
             render: response.data.isSuccess
               ? `Tweet Posted`
@@ -157,9 +161,11 @@ const HomePage = ({
             isLoading: false,
             autoClose: 500,
           });
-          closeButtonRef.current.click();
+          hasMoreTweets = true;
+          allTweet();
         })
         .catch((error) => {
+          setTweetPosting(false);
           closeButtonRef.current.click();
           toast.update(loading, {
             render:
@@ -221,6 +227,7 @@ const HomePage = ({
           aria-hidden="true"
         >
           <TweetModal
+            isTweetPosting={isTweetPosting}
             closeButtonRef={closeButtonRef}
             handleTweet={handleTweet}
           />

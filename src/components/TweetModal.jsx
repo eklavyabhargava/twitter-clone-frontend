@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import Spinner from "react-bootstrap/Spinner";
 
-const TweetModal = ({ closeButtonRef, handleTweet }) => {
+const TweetModal = ({ closeButtonRef, handleTweet, isTweetPosting }) => {
   const [content, setContent] = useState("");
 
   // preview image in modal
@@ -82,10 +83,15 @@ const TweetModal = ({ closeButtonRef, handleTweet }) => {
           </button>
           <button
             type="button"
+            disabled={isTweetPosting}
             onClick={() => handleTweet(content)}
             className="bg-btn-bg hover:bg-btn-hover px-3 py-2 rounded text-white"
           >
-            Tweet
+            {isTweetPosting ? (
+              <Spinner animation="grow" size="sm" variant="light" />
+            ) : (
+              "Tweet"
+            )}
           </button>
         </div>
       </div>
