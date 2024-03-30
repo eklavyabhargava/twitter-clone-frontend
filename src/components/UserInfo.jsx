@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useApiUrl } from "../App";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { followUser, unfollowUser, updateUserData } from "../shared/actions";
+import { followUser, setUser, unfollowUser } from "../shared/actions";
 import { reAuthenticate } from "../routes/AuthRoute";
 import { useSelector } from "react-redux";
 import UploadImage from "./UploadImage";
@@ -128,7 +128,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
           });
           closeButtonRef.current.click();
           setUpdatingInfo(false);
-          dispatch(userInfo);
+          dispatch(setUser(userInfo));
         } else if (response.status === 401) {
           setUpdatingInfo(false);
           closeButtonRef.current.click();
@@ -188,7 +188,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
           const { profilePic, ...otherData } = userInfo;
           const user = { ...otherData, profilePic: response.data.profilePic };
 
-          dispatch(updateUserData(user));
+          dispatch(setUser(user));
         } else {
           setImageUploading(false);
           closeButtonRef.current.click();
