@@ -245,10 +245,10 @@ const UserInfo = ({ userData, userId, onApiError }) => {
                   ? handleUnfollow()
                   : handleFollow();
               }}
-              className="follow-btn me-2 absolute top-0 end-0 bg-[#474747] text-btnText hover:bg-[#1a1b1c] px-3 py-2 rounded hidden sm:flex"
+              className="follow-btn me-2 absolute top-0 end-0 bg-[#474747] text-btnText hover:bg-[#1a1b1c] px-3 py-2 rounded hidden md:flex"
             >
               {user?.followings && user?.followings.includes(userId)
-                ? "followings"
+                ? "Following"
                 : "Follow"}
             </button>
           )}
@@ -343,20 +343,22 @@ const UserInfo = ({ userData, userId, onApiError }) => {
               </button>
             </div>
           ) : (
-            <button
-              type="button"
-              disabled={disableBtn}
-              onClick={() => {
-                user?.followings && user.followings.includes(userId)
-                  ? handleUnfollow()
-                  : handleFollow();
-              }}
-              className="follow-btn me-2 absolute top-0 end-0 bg-[#474747] text-btnText hover:bg-[#1a1b1c] px-3 py-2 rounded hidden sm:flex"
-            >
-              {user?.followings && user?.followings.includes(userId)
-                ? "followings"
-                : "Follow"}
-            </button>
+            <div className="md:hidden flex">
+              <button
+                type="button"
+                disabled={disableBtn}
+                onClick={() => {
+                  user?.followings && user.followings.includes(userId)
+                    ? handleUnfollow()
+                    : handleFollow();
+                }}
+                className="follow-btn bg-[#474747] text-btnText hover:bg-[#1a1b1c] px-3 py-2 rounded"
+              >
+                {user?.followings && user?.followings.includes(userId)
+                  ? "Following"
+                  : "Follow"}
+              </button>
+            </div>
           )}
           <div className="mt-3 d-flex flex-row fw-bold">
             <p className="me-3">
