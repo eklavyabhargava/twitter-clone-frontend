@@ -248,7 +248,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
               className="follow-btn me-2 absolute top-0 end-0 bg-[#474747] text-btnText hover:bg-[#1a1b1c] px-3 py-2 rounded hidden sm:flex"
             >
               {user?.followings && user?.followings.includes(userId)
-                ? "followings"
+                ? "Following"
                 : "Follow"}
             </button>
           )}
@@ -268,7 +268,6 @@ const UserInfo = ({ userData, userId, onApiError }) => {
               closeButtonRef={closeButtonRef}
             />
           </div>
-
           <div
             className="modal fade"
             id="staticBackdrop"
@@ -354,7 +353,7 @@ const UserInfo = ({ userData, userId, onApiError }) => {
               className="follow-btn me-2 absolute top-0 end-0 bg-[#474747] text-btnText hover:bg-[#1a1b1c] px-3 py-2 rounded hidden sm:flex"
             >
               {user?.followings && user?.followings.includes(userId)
-                ? "followings"
+                ? "Following"
                 : "Follow"}
             </button>
           )}

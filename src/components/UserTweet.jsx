@@ -28,13 +28,38 @@ const UserTweet = ({
   const userData = JSON.parse(localStorage.getItem("userData"));
   const token = userData?.token;
 
+  const likeUnlikeTweet = (tweetId) => {
+    setTweets((prevTweets) =>
+      prevTweets.map((tweet) => {
+        if (tweet._id === tweetId) {
+          const likedByCurrentUser = tweet.likes.some(
+            (like) => like._id === user._id
+          );
+          if (likedByCurrentUser) {
+            // User has already liked the tweet, remove their ID from likes
+            tweet.likes = tweet.likes.filter((like) => like._id !== user._id);
+          } else {
+            // User has not liked the tweet, include their ID in likes
+            tweet.likes.push({
+              _id: user._id,
+              name: user.name,
+              username: user.username,
+              profilePic: user.profilePic,
+            });
+          }
+        }
+        return tweet;
+      })
+    );
+  };
+
   // like tweet
   const likeTweet = async (e, postId) => {
     // call handleLike function
     await handleLike(e, postId);
 
     // update tweets
-    allTweet();
+    likeUnlikeTweet(postId);
   };
 
   // delete tweet
@@ -43,7 +68,10 @@ const UserTweet = ({
     await handleDelete(e, postId);
 
     // update tweets
-    allTweet();
+    setTweets((prevTweets) => {
+      const newTweets = prevTweets.filter((tweet) => tweet._id !== postId);
+      return [...newTweets];
+    });
   };
 
   // Retweet

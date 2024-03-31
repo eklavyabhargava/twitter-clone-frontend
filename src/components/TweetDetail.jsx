@@ -91,8 +91,8 @@ const TweetInfo = ({
               <p className="card-text">{tweetDetail.content}</p>
               {tweetDetail.image && (
                 <img
-                  className="img-fluid"
-                  src={tweetDetail.profilePic}
+                  className="img-fluid max-h-[500px] md:h-[500px] mx-auto w-auto mt-2"
+                  src={tweetDetail.image}
                   alt=""
                 />
               )}

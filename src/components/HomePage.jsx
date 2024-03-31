@@ -28,7 +28,7 @@ const HomePage = ({
   const [isTweetPosting, setTweetPosting] = useState(false);
   const user = useSelector((state) => state.user);
   const [isTweetFetching, setTweetFetching] = useState(false);
-  let hasMoreTweets = true;
+  const [hasMoreTweets, setMoreTweets] = useState(true);
 
   const customId = "customId1";
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -74,7 +74,7 @@ const HomePage = ({
           setPage((curr) => curr + 1);
           const newTweets = response.data.tweets;
           if (newTweets.length === 0) {
-            hasMoreTweets = false; // No more tweets available
+            setMoreTweets(false); // No more tweets available
           } else {
             setTweets((prevTweets) => [...prevTweets, ...newTweets]);
           }
@@ -161,8 +161,9 @@ const HomePage = ({
             isLoading: false,
             autoClose: 500,
           });
-          hasMoreTweets = true;
-          allTweet();
+          setTweets((prevTweets) => {
+            return [response.data.tweet, ...prevTweets];
+          });
         })
         .catch((error) => {
           setTweetPosting(false);
@@ -186,6 +187,7 @@ const HomePage = ({
   return (
     <div className="mt-1 pt-1 w-full">
       <Tweet
+        setTweets={setTweets}
         likeUnlikeTweet={likeUnlikeTweet}
         isTweetFetching={isTweetFetching}
         tweets={tweets}

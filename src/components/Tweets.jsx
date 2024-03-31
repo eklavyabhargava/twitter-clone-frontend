@@ -6,6 +6,7 @@ import Loading from "./loading";
 import { useSelector } from "react-redux";
 
 const Tweets = ({
+  setTweets,
   likeUnlikeTweet,
   isTweetFetching,
   getProfile,
@@ -41,7 +42,10 @@ const Tweets = ({
     await handleDelete(e, postId);
 
     // update tweets
-    allTweet();
+    setTweets((prevTweets) => {
+      const newTweets = prevTweets.filter((tweet) => tweet._id !== postId);
+      return [...newTweets];
+    });
   };
 
   // Retweet
