@@ -59,53 +59,60 @@ const Login = () => {
     if (!isValidData) {
       return;
     }
-    setLoading(true);
 
-    axios
-      .post(`${API_URL}/api/auth/login`, { ...credentials })
-      .then((response) => {
-        if (response.data.isSuccess) {
-          console.log(response.data);
-          localStorage.setItem(
-            "userData",
-            JSON.stringify({
-              token: response.data.Token,
-            })
-          );
-          dispatch(setUser(response.data.user));
-          toast.success("Login Successful!", {
-            position: "bottom-right",
-            autoClose: 800,
-            toastId: customId1,
-          });
-          setLoading(false);
-          dispatch(setUser(response.data.user)).then(() => {
-            setLogin(true);
-          });
-        } else {
-          toast.error(response.data.errMsg ?? "Something went wrong!", {
-            position: "bottom-right",
-            autoClose: 800,
-            toastId: customId2,
-          });
-          setLoading(false);
-        }
-      })
-      .catch((error) => {
-        // handle error
-        toast.error(
-          error.response.data.errMsg ||
-            (error.response?.status === 500
-              ? "Internal server error!"
-              : "Something went wrong!"),
-          {
-            position: "bottom-right",
-            autoClose: 800,
-            toastId: customId2,
-          }
-        );
-        setLoading(false);
-      });
+    toast.error("Couldn't connect to server! Working on it...", {
+      position: "top-center",
+      autoClose: 1000,
+      toastId: customId1,
+    });
+    return;
+
+    // setLoading(true);
+
+    // axios
+    //   .post(`${API_URL}/api/auth/login`, { ...credentials })
+    //   .then((response) => {
+    //     if (response.data.isSuccess) {
+    //       localStorage.setItem(
+    //         "userData",
+    //         JSON.stringify({
+    //           token: response.data.Token,
+    //         })
+    //       );
+    //       dispatch(setUser(response.data.user));
+    //       toast.success("Login Successful!", {
+    //         position: "bottom-right",
+    //         autoClose: 800,
+    //         toastId: customId1,
+    //       });
+    //       setLoading(false);
+    //       dispatch(setUser(response.data.user)).then(() => {
+    //         setLogin(true);
+    //       });
+    //     } else {
+    //       toast.error(response.data.errMsg ?? "Something went wrong!", {
+    //         position: "bottom-right",
+    //         autoClose: 800,
+    //         toastId: customId2,
+    //       });
+    //       setLoading(false);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     // handle error
+    //     toast.error(
+    //       error.response.data.errMsg ||
+    //         (error.response?.status === 500
+    //           ? "Internal server error!"
+    //           : "Something went wrong!"),
+    //       {
+    //         position: "bottom-right",
+    //         autoClose: 800,
+    //         toastId: customId2,
+    //       }
+    //     );
+    //     setLoading(false);
+    //   });
   };
 
   useEffect(() => {
