@@ -218,7 +218,7 @@ const TweetReplies = ({
                             <button
                               type="button"
                               ref={closeButtonRef}
-                              className="btn btn-secondary"
+                              className="bg-secBtn-bg hover:bg-secBtn-hover text-white p-2 rounded"
                               data-bs-dismiss="modal"
                             >
                               Close
@@ -229,7 +229,7 @@ const TweetReplies = ({
                                 e.stopPropagation();
                                 handleTweetReply(e, reply._id);
                               }}
-                              className="btn btn-primary"
+                              className="bg-btn-bg hover:bg-btn-hover px-3 py-2 rounded text-white"
                             >
                               Reply
                             </button>

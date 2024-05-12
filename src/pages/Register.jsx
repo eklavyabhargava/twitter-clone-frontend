@@ -73,40 +73,46 @@ const Register = (props) => {
     if (!isValidData) {
       return;
     }
+    toast.error("Couldn't connect to server! Working on it...", {
+      position: "top-center",
+      autoClose: 1000,
+      toastId: customId1,
+    });
+    return;
 
-    setLoading(true);
-    e.preventDefault();
-    try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, {
-        ...userData,
-      });
-      setLoading(false);
-      if (response.data.isSuccess) {
-        toast.success("Registered Successfully!", {
-          position: "bottom-right",
-          toastId: customId1,
-        });
-        navigate("/login");
-      } else {
-        toast.error("Something went wrong!", {
-          position: "bottom-right",
-          toastId: customId1,
-        });
-      }
-    } catch (error) {
-      setLoading(false);
-      toast.error(
-        error.response?.data.errMsg ??
-          (error.response?.status === 500
-            ? "Internal server error!"
-            : "Something went wrong!"),
-        {
-          position: "bottom-right",
-          toastId: customId2,
-        }
-      );
-    }
-    setLoading(false);
+    // setLoading(true);
+    // e.preventDefault();
+    // try {
+    //   const response = await axios.post(`${API_URL}/api/auth/register`, {
+    //     ...userData,
+    //   });
+    //   setLoading(false);
+    //   if (response.data.isSuccess) {
+    //     toast.success("Registered Successfully!", {
+    //       position: "bottom-right",
+    //       toastId: customId1,
+    //     });
+    //     navigate("/login");
+    //   } else {
+    //     toast.error("Something went wrong!", {
+    //       position: "bottom-right",
+    //       toastId: customId1,
+    //     });
+    //   }
+    // } catch (error) {
+    //   setLoading(false);
+    //   toast.error(
+    //     error.response?.data.errMsg ??
+    //       (error.response?.status === 500
+    //         ? "Internal server error!"
+    //         : "Something went wrong!"),
+    //     {
+    //       position: "bottom-right",
+    //       toastId: customId2,
+    //     }
+    //   );
+    // }
+    // setLoading(false);
   };
 
   if (localStorage.getItem("userData")) {
