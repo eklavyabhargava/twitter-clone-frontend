@@ -19,6 +19,7 @@ firebase-debug.txt
 # misc
 .DS_Store
 .env
+.runtimeconfig.json
 .env.local
 .env.development.local
 .env.test.local

@@ -9,11 +9,26 @@ name: Deploy to Firebase Hosting on merge
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    env:
-      REACT_APP_API_URL: https://nice-pear-sundress.cyclic.app
     steps:
+      # setup firebase cli
+      - name: Setup Firebase CLI
+        run: npm install -g firebase-tools
+
+      # retrieve firebase runtimeconfig and store in .env file
+      - name: Create .env file
+        run: |
+          touch .env
+          firebase functions:config:get > .runtimeconfig.json
+          # write each key-value pair in .env file
+          jq -r 'to_entries[] | "\(.key | ascii_upcase)=\(.value)"' .runtimeconfig.json >> .env
+
+      # Checkout code
       - uses: actions/checkout@v4
+
+      # install dependencies and build the project
       - run: npm ci && npm run build
+
+      # deploy to firebase hosting
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
