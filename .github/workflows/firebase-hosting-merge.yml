@@ -10,24 +10,37 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      # setup firebase cli
+      # Checkout code
+      - uses: actions/checkout@v4
+
+      # Setup Firebase CLI
       - name: Setup Firebase CLI
         run: npm install -g firebase-tools
 
-      # install jq for json parsing
-      - name: Install jq
-        run: sudo apt-get install jq
+      # Manually Create Firebase Service Account JSON from individual secrets
+      - name: Setup Firebase Authentication
+        run: |
+          echo "{
+            \"type\": \"service_account\",
+            \"project_id\": \"twitter-webapp-project\",
+            \"private_key_id\": \"${{ secrets.PRIVATE_KEY_ID }}\",
+            \"private_key\": \"${{ secrets.PRIVATE_KEY }}\",
+            \"client_email\": \"${{ secrets.CLIENT_EMAIL }}\",
+            \"client_id\": \"${{ secrets.CLIENT_ID }}\",
+            \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",
+            \"token_uri\": \"https://oauth2.googleapis.com/token\",
+            \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",
+            \"client_x509_cert_url\": \"${{ secrets.CLIENT_X509_CERT_URL }}\"
+          }" > "${HOME}/firebase-key.json"
+          
+          export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
+          firebase functions:config:get --project eklavya-portfolio > .runtimeconfig.json
 
-      # retrieve firebase runtimeconfig and store in .env file
+      # Create .env file
       - name: Create .env file
         run: |
           touch .env
-          firebase functions:config:get > .runtimeconfig.json
-          # write each key-value pair in .env file
           jq -r '.envs | to_entries[] | "\(.key | ascii_upcase)=\(.value)"' .runtimeconfig.json >> .env
-
-      # Checkout code
-      - uses: actions/checkout@v4
 
       # install dependencies and build the project
       - run: npm ci && npm run build
