@@ -34,7 +34,7 @@ jobs:
           }" > "${HOME}/firebase-key.json"
           
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
-          firebase functions:config:get --project eklavya-portfolio > .runtimeconfig.json
+          firebase functions:config:get --project twitter-webapp-project > .runtimeconfig.json
 
       # Create .env file
       - name: Create .env file
