@@ -20,7 +20,7 @@ jobs:
       - name: Setup Firebase Authentication
         run: |
           printf '%s' "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_CLONE_WEBAPP_DEV }}" > "${HOME}/firebase-key.json"
-          echo "::add-mask::$SECRET_VALUE"
+          cat "${HOME}/firebase-key.json" | jq .
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
           firebase functions:config:get --project twitter-clone-webapp-dev > .runtimeconfig.json
 
