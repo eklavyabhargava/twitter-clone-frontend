@@ -2,14 +2,15 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on PR
-"on": pull_request
+on: pull_request
 permissions:
   checks: write
   contents: read
   pull-requests: write
+
 jobs:
   build_and_preview:
-    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
       # Checkout code
@@ -24,7 +25,7 @@ jobs:
         run: |
           echo "{
             \"type\": \"service_account\",
-            \"project_id\": \"eklavya-portfolio\",
+            \"project_id\": \"twitter-webapp-project\",
             \"private_key_id\": \"${{ secrets.PRIVATE_KEY_ID }}\",
             \"private_key\": \"${{ secrets.PRIVATE_KEY }}\",
             \"client_email\": \"${{ secrets.CLIENT_EMAIL }}\",
@@ -34,7 +35,7 @@ jobs:
             \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",
             \"client_x509_cert_url\": \"${{ secrets.CLIENT_X509_CERT_URL }}\"
           }" > "${HOME}/firebase-key.json"
-          
+
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
           firebase functions:config:get --project twitter-webapp-project > .runtimeconfig.json
 
@@ -47,9 +48,8 @@ jobs:
       # install dependencies and build the project
       - run: npm ci && npm run build
 
-      # deploy to firebase hosting
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_WEBAPP_PROJECT }}"
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_WEBAPP_PROJECT }}
           projectId: twitter-webapp-project

@@ -2,7 +2,7 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
-"on":
+on:
   push:
     branches:
       - main
@@ -32,7 +32,7 @@ jobs:
             \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",
             \"client_x509_cert_url\": \"${{ secrets.CLIENT_X509_CERT_URL }}\"
           }" > "${HOME}/firebase-key.json"
-          
+
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
           firebase functions:config:get --project twitter-webapp-project > .runtimeconfig.json
 
@@ -45,10 +45,9 @@ jobs:
       # install dependencies and build the project
       - run: npm ci && npm run build
 
-      # deploy to firebase hosting
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_WEBAPP_PROJECT }}"
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_WEBAPP_PROJECT }}
           channelId: live
           projectId: twitter-webapp-project
