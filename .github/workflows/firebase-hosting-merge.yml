@@ -19,8 +19,19 @@ jobs:
       # Manually Create Firebase Service Account JSON from individual secrets
       - name: Setup Firebase Authentication
         run: |
-          printf '%s' "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_CLONE_WEBAPP_DEV }}" > "${HOME}/firebase-key.json"
-          cat "${HOME}/firebase-key.json" | jq .
+          echo "{
+            \"type\": \"service_account\",
+            \"project_id\": \"twitter-clone-webapp-dev\",
+            \"private_key_id\": \"${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_CLONE_WEBAPP_DEV.PRIVATE_KEY_ID }}\",
+            \"private_key\": \"${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_CLONE_WEBAPP_DEV.PRIVATE_KEY }}\",
+            \"client_email\": \"${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_CLONE_WEBAPP_DEV.CLIENT_EMAIL }}\",
+            \"client_id\": \"${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_CLONE_WEBAPP_DEV.CLIENT_ID }}\",
+            \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",
+            \"token_uri\": \"https://oauth2.googleapis.com/token\",
+            \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",
+            \"client_x509_cert_url\": \"${{ secrets.FIREBASE_SERVICE_ACCOUNT_TWITTER_CLONE_WEBAPP_DEV.CLIENT_X509_CERT_URL }}\"
+          }" > "${HOME}/firebase-key.json"
+
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/firebase-key.json"
           firebase functions:config:get --project twitter-clone-webapp-dev > .runtimeconfig.json
 
