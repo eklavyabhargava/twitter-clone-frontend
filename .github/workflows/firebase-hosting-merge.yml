@@ -18,7 +18,7 @@ jobs:
 
       # Manually Create Firebase Service Account JSON from individual secrets
       - name: Setup Firebase Authentication
-        run: firebase functions:config:get --project twitter-webapp-project > .runtimeconfig.json
+        run: firebase functions:config:get > .runtimeconfig.json
 
       # Create .env file
       - name: Create .env file
